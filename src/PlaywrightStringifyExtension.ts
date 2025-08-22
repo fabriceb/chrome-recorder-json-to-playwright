@@ -13,13 +13,14 @@ import {
 export class PlaywrightStringifyExtension extends StringifyExtension {
   async beforeAllSteps(out: LineWriter, flow: Schema.UserFlow): Promise<void> {
     out
+      .appendLine(`import { test, expect } from '@playwright/test';`)
+      .appendLine('')
+    out
       .appendLine(`test.describe(${formatAsJSLiteral(flow.title)}, () => {`)
       .startBlock()
     out
       .appendLine(
-        `test(${formatAsJSLiteral(
-          `tests ${flow.title}`
-        )}, async ({ page }) => {`
+        `test(${formatAsJSLiteral(flow.title)}, async ({ page }) => {`
       )
       .startBlock()
   }
@@ -75,7 +76,7 @@ export class PlaywrightStringifyExtension extends StringifyExtension {
 
     if (playwrightSelector) {
       out.appendLine(
-        `${playwrightSelector}.type(${formatAsJSLiteral(step.value)});`
+        `await ${playwrightSelector}.fill(${formatAsJSLiteral(step.value)});`
       )
     }
   }
@@ -90,11 +91,11 @@ export class PlaywrightStringifyExtension extends StringifyExtension {
 
     if (playwrightSelector) {
       if (hasRightClick) {
-        out.appendLine(`${playwrightSelector}.click({
+        out.appendLine(`await ${playwrightSelector}.click({
           button: 'right'
-        })`)
+        });`)
       } else {
-        out.appendLine(`${playwrightSelector}.click()`)
+        out.appendLine(`await ${playwrightSelector}.click();`)
       }
     } else {
       console.log(
@@ -103,9 +104,9 @@ export class PlaywrightStringifyExtension extends StringifyExtension {
     }
 
     if (step.assertedEvents) {
-      step.assertedEvents.forEach((event) => {
+      step.assertedEvents.forEach((event: any) => {
         if (event.type === 'navigation') {
-          out.appendLine(`expect(page.url()).toBe('${event.url}');`)
+          out.appendLine(`await expect(page).toHaveURL('${event.url}');`)
         }
       })
     }
@@ -119,7 +120,7 @@ export class PlaywrightStringifyExtension extends StringifyExtension {
     const playwrightSelector = handleSelectors(step.selectors, flow)
 
     if (playwrightSelector) {
-      out.appendLine(`${playwrightSelector}.dblclick();`)
+      out.appendLine(`await ${playwrightSelector}.dblclick();`)
     } else {
       console.log(
         `Warning: The click on ${step.selectors[0]} was not able to be exported to Playwright. Please adjust your selectors and try again.`,
@@ -136,7 +137,7 @@ export class PlaywrightStringifyExtension extends StringifyExtension {
     const playwrightSelector = handleSelectors(step.selectors, flow)
 
     if (playwrightSelector) {
-      out.appendLine(`${playwrightSelector}.hover();`)
+      out.appendLine(`await ${playwrightSelector}.hover();`)
     }
   }
 
@@ -146,7 +147,7 @@ export class PlaywrightStringifyExtension extends StringifyExtension {
     if (pressedKey in supportedRecorderKeys) {
       const keyValue = supportedRecorderKeys[pressedKey]
       out.appendLine(
-        `page.keyboard.down(${formatAsJSLiteral(`{${keyValue}}`)});`
+        `await page.keyboard.press(${formatAsJSLiteral(keyValue)});`
       )
     }
   }
@@ -162,7 +163,7 @@ export class PlaywrightStringifyExtension extends StringifyExtension {
   ): void {
     if ('selectors' in step) {
       out.appendLine(
-        `${handleSelectors(step.selectors, flow)}.scrollIntoViewIfNeeded();`
+        `await ${handleSelectors(step.selectors, flow)}.scrollIntoViewIfNeeded();`
       )
     } else {
       out.appendLine(`await page.mouse.wheel(${step.x}, ${step.y});`)
@@ -173,7 +174,7 @@ export class PlaywrightStringifyExtension extends StringifyExtension {
     out.appendLine(`await page.setViewportSize({
       width: ${step.width},
       height: ${step.height}
-    })`)
+    });`)
   }
 }
 
@@ -204,8 +205,8 @@ function handleSelectors(
     )
   }
   if (preferredSelector && preferredSelector[0]) {
-    return `await page.locator(${formatAsJSLiteral(preferredSelector[0][0])})`
+    return `page.locator(${formatAsJSLiteral(preferredSelector[0][0])})`
   } else {
-    return `await page.locator(${formatAsJSLiteral(nonAriaSelectors[0][0])})`
+    return `page.locator(${formatAsJSLiteral(nonAriaSelectors[0][0])})`
   }
 }
