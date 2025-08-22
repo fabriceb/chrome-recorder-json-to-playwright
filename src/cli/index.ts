@@ -12,10 +12,10 @@ import { defaultOutputFolder } from '../constants.js'
 // CLI
 const cli = meow(
   `
-Usage:      npx playwright-chrome-recorder <path> [options]
+Usage:      npx chrome-recorder-json-to-playwright <path> [options]
 
-Examples:   npx playwright-chrome-recorder recording.json
-            npx playwright-chrome-recorder recordings/*.json
+Examples:   npx chrome-recorder-json-to-playwright recording.json
+            npx chrome-recorder-json-to-playwright recordings/*.json
 
 Options:
   -f, --force       Bypass Git safety checks and force script to run

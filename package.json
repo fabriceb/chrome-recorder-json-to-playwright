@@ -1,8 +1,8 @@
 {
-  "name": "playwright-chrome-recorder",
+  "name": "chrome-recorder-json-to-playwright",
   "version": "1.0.2",
   "description": "Generate Playwright Tests from Chrome DevTools Recordings",
-  "bin": "bin/playwright-chrome-recorder.js",
+  "bin": "bin/chrome-recorder-json-to-playwright.js",
   "main": "dist/main.js",
   "files": [
     "bin",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andrewusher/playwright-chrome-recorder.git"
+    "url": "git+https://github.com/fabriceb/chrome-recorder-json-to-playwright.git"
   },
   "keywords": [
     "playwright",
@@ -22,12 +22,12 @@
     "automation",
     "devtools"
   ],
-  "author": "Andrew Usher",
+  "contributors": ["Andrew Usher", "Fabrice Bernhard"],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/andrewusher/playwright-chrome-recorder/issues"
+    "url": "https://github.com/fabriceb/chrome-recorder-json-to-playwright/issues"
   },
-  "homepage": "https://github.com/andrewusher/playwright-chrome-recorder#readme",
+  "homepage": "https://github.com/fabriceb/chrome-recorder-json-to-playwright#readme",
   "dependencies": {
     "@puppeteer/replay": "^2.10.2",
     "chalk": "^5.0.1",

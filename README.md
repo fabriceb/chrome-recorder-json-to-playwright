@@ -1,19 +1,11 @@
-# playwright-chrome-recorder
+# chrome-recorder-json-to-playwright
 
-
-
-This repo provides tools to export P Tests from [Google Chrome DevTools' Recordings](https://goo.gle/devtools-recorder) programmatically.
-
-## Prerequisites
-
-In order to export JSON files from Chrome DevTools Recorder you will need to be on Chrome 101 or newer.
-
-`dblClick` and `rightclick` require Chrome 103 or newer.
+This repo provides a tool to convert [Google Chrome DevTools' Recordings](https://goo.gle/devtools-recorder) JSON export to Playwright code.
 
 ## Installation
 
 ```sh
-$ npm install -g playwright-chrome-recorder
+$ npm install -g chrome-recorder-json-to-playwright
 ```
 
 ## Usage
@@ -23,7 +15,7 @@ $ npm install -g playwright-chrome-recorder
 To use the interactive CLI, run:
 
 ```sh
-$ npx playwright-chrome-recorder
+$ npx chrome-recorder-json-to-playwright
 ```
 
 The CLI will prompt you to enter the path of the directory or file that you would like to modify as well as a path to write the generated playwright tests to.
@@ -31,13 +23,13 @@ The CLI will prompt you to enter the path of the directory or file that you woul
 If you prefer to enter paths via the CLI, you can run the following command to export individual recordings:
 
 ```sh
-$ npx playwright-chrome-recorder <relative path to target test file>
+$ npx chrome-recorder-json-to-playwright <relative path to target test file>
 ```
 
 or for folders containing multiple recordings:
 
 ```sh
-$ npx playwright-chrome-recorder <relative path to target test folder>/*.json
+$ npx chrome-recorder-json-to-playwright <relative path to target test folder>/*.json
 ```
 
 By default the output will be written to a `playwright` folder in the current working directory.
@@ -45,7 +37,7 @@ By default the output will be written to a `playwright` folder in the current wo
 If you prefer a different output directory, specify that via CLI:
 
 ```sh
-$ npx playwright-chrome-recorder <relative path to target test folder>/*.json --output=folder-name
+$ npx chrome-recorder-json-to-playwright <relative path to target test folder>/*.json --output=folder-name
 ```
 
 or via the interactive CLI prompts.
@@ -62,7 +54,7 @@ or via the interactive CLI prompts.
 ### Via Import
 
 ```js
-import { playwrightStringifyChromeRecording } from 'playwright-chrome-recorder';
+import { playwrightStringifyChromeRecording } from "chrome-recorder-json-to-playwright";
 
 const stringifiedContent = await playwrightStringifyChromeRecording(
   recordingContent
@@ -75,19 +67,18 @@ return stringifiedContent;
 
 Below are the step types that are currently supported:
 
-| Type                | Description                                   |
-| ------------------- | --------------------------------------------- |
-| change              | becomes **page.locator("_element_").type("text")**  |
-| click               | becomes **page.locator("_element_").click();**      |
+| Type                | Description                                                       |
+| ------------------- | ----------------------------------------------------------------- |
+| change              | becomes **page.locator("_element_").fill("text")**                |
+| click               | becomes **page.locator("_element_").click();**                    |
 | click (right click) | becomes **page.locator("_element_").click({ button: 'right' });** |
-| doubleClick         | becomes **page.locator("_element_").dblclick();**   |
-| hover               | becomes **page.locator("_element_").hover();**    |
-| keyDown             | becomes **page.keyboard.down("{key}")**                  |
-| keyUp               | _not exported at this time_                   |
-| navigate            | becomes **await page.goto("url")**                   |
-| setViewport         | becomes **await page.setViewportSize({ width, height })**        |
-| scroll              | becomes **await page.mouse.wheel(x, y)** |
-
+| doubleClick         | becomes **page.locator("_element_").dblclick();**                 |
+| hover               | becomes **page.locator("_element_").hover();**                    |
+| keyDown             | becomes **page.keyboard.down("{key}")**                           |
+| keyUp               | _not exported at this time_                                       |
+| navigate            | becomes **await page.goto("url")**                                |
+| setViewport         | becomes **await page.setViewportSize({ width, height })**         |
+| scroll              | becomes **await page.mouse.wheel(x, y)**                          |
 
 If a step type is not listed above, then a warning message should be displayed in the CLI.
 
